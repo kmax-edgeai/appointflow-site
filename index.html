@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppointFlow — Asistente de citas para clínicas</title>
+<meta name="description" content="AppointFlow contesta los mensajes de tus pacientes, resuelve sus dudas y agenda la cita en el calendario del doctor. Asistente de atención y agendamiento para clínicas en Perú.">
+<link rel="canonical" href="https://appointflow.edge-ai.tech/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AppointFlow">
+<meta property="og:title" content="AppointFlow — Asistente de citas para clínicas">
+<meta property="og:description" content="AppointFlow contesta los mensajes de tus pacientes, resuelve sus dudas y agenda la cita en el calendario del doctor. Asistente de atención y agendamiento para clínicas en Perú.">
+<meta property="og:url" content="https://appointflow.edge-ai.tech/">
+<meta property="og:locale" content="es_PE">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+<header class="site-head" id="head">
+  <div class="wrap">
+    <div class="head-row">
+      <a class="brand" href="/">
+        <svg class="mark" viewBox="0 0 26 26" aria-hidden="true">
+          <rect x="1" y="4" width="24" height="21" rx="4" fill="none" stroke="#152a42" stroke-width="2"/>
+          <path d="M1 10h24" stroke="#152a42" stroke-width="2"/>
+          <path d="M7 1v5M19 1v5" stroke="#152a42" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7.5 17.2l3.2 3.2 7-7.4" fill="none" stroke="#a8ca1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        AppointFlow
+      </a>
+      <nav class="nav-main" aria-label="Principal">
+        <a href="#que-hace">Qué hace</a>
+        <a href="#demo">Pruébalo</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#seguridad">Seguridad</a>
+      </nav>
+      <a class="btn btn-primary head-cta" href="#contacto">Agendar una llamada</a>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+<nav class="drawer" id="drawer" aria-label="Menú">
+  <a href="#que-hace">Qué hace</a>
+  <a href="#demo">Pruébalo</a>
+  <a href="#como-funciona">Cómo funciona</a>
+  <a href="#seguridad">Seguridad</a>
+  <a href="/privacidad/">Privacidad</a>
+  <a class="btn btn-primary" href="#contacto">Agendar una llamada</a>
+</nav>
+<main>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow rise d1">Asistente de citas para clínicas</div>
+        <h1 class="rise d2">La primera respuesta de tu clínica, en <em>menos de un minuto</em>.</h1>
+        <p class="lede rise d3">AppointFlow contesta los mensajes de tus pacientes, resuelve sus dudas, toma sus datos y deja la cita agendada en el calendario del doctor. Tu equipo deja de vivir pendiente del celular.</p>
+        <div class="hero-actions rise d4">
+          <a class="btn btn-primary" href="#contacto">Agendar una demostración <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="#demo">Ver cómo responde</a>
+        </div>
+        <p class="trust rise d5">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l6 2.4v4.2c0 3.4-2.4 6.4-6 7.4-3.6-1-6-4-6-7.4V3.4L8 1z" fill="none" stroke="#5b7391" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          Hecho en Perú, para clínicas peruanas. Tratamiento de datos conforme a la Ley N.° 29733 y su reglamento.
+        </p>
+      </div>
+
+      <div class="chat rise d3" id="chatCard">
+        <div class="chat-head">
+          <div class="avatar">CD</div>
+          <div>
+            <b>Clínica Dental Ejemplo</b>
+            <span>Asistente de citas</span>
+          </div>
+          <div class="live"><i class="dot-live"></i> EN VIVO</div>
+        </div>
+        <div class="stream" id="stream" aria-live="polite"></div>
+        <div class="chat-foot">
+          <span>Conversación de ejemplo · datos ficticios</span>
+          <button type="button" id="replay">↻ repetir</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="strip">
+    <div class="wrap strip-grid">
+      <h2 class="h2" data-rev>El paciente escribe cuando puede. Tu recepción atiende cuando puede.</h2>
+      <div data-rev>
+        <p>Entre esos dos momentos se pierden las citas. Un mensaje a las nueve de la noche que se responde al día siguiente. Una consulta que nadie retomó. Un paciente que preguntó por un horario y terminó agendando en otra clínica.</p>
+        <p>No es un problema de esfuerzo del equipo: es que la recepción no puede estar en el mostrador y en el chat al mismo tiempo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="que-hace">
+    <div class="wrap">
+      <div class="sec-top" data-rev>
+        <div class="eyebrow">Qué hace</div>
+        <h2 class="h2">Un asistente que conoce tu clínica y tiene acceso a tu agenda</h2>
+        <p class="lede">Trabaja sobre la API oficial de WhatsApp Business de Meta, con el número que tu clínica ya usa. El paciente no instala nada ni aprende nada nuevo.</p>
+      </div>
+      <ul class="caps" data-rev>
+        <li class="cap">
+          <div class="n">01</div>
+          <h3>Responde de inmediato, a toda hora</h3>
+          <p>Cada mensaje entrante recibe respuesta en segundos, en español, con la información real de tu clínica: servicios, horarios, ubicación, preparación previa, doctores.</p>
+        </li>
+        <li class="cap">
+          <div class="n">02</div>
+          <h3>Registra al prospecto desde el primer mensaje</h3>
+          <p>Nombre y teléfono se piden al inicio, no al final. Si el paciente deja de responder a mitad de camino, tu clínica igual se queda con un contacto real al que llamar.</p>
+        </li>
+        <li class="cap">
+          <div class="n">03</div>
+          <h3>Agenda contra el calendario de verdad</h3>
+          <p>Consulta la disponibilidad real de cada doctor y reserva el espacio. Nada de «te confirmamos luego»: la cita queda puesta durante la misma conversación.</p>
+        </li>
+        <li class="cap">
+          <div class="n">04</div>
+          <h3>Sabe cuándo llamar a una persona</h3>
+          <p>Ante un caso clínico delicado, un reclamo o algo fuera de su alcance, entrega la conversación a tu equipo y avisa al número que designes con un resumen: quién es, qué quiere, cuándo, DNI y teléfono.</p>
+        </li>
+        <li class="cap">
+          <div class="n">05</div>
+          <h3>Todo queda en un panel</h3>
+          <p>Conversaciones, prospectos, citas y métricas en un solo lugar, con historial completo de cada paciente. Varias sedes o varios doctores, cada uno con su agenda.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="demo" style="background:var(--cream-deep);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)">
+    <div class="wrap">
+      <div class="sec-top" data-rev>
+        <div class="eyebrow">Pruébalo</div>
+        <h2 class="h2">Escribe como escribiría tu paciente</h2>
+        <p class="lede">Elige una pregunta de las que llegan todos los días y mira qué contesta. Esta es una simulación con datos ficticios de una clínica de ejemplo.</p>
+      </div>
+
+      <div class="demo-grid">
+        <div data-rev>
+          <div class="chat">
+            <div class="chat-head">
+              <div class="avatar">CD</div>
+              <div><b>Simulación</b><span>Clínica de ejemplo · Lima</span></div>
+              <div class="live"><i class="dot-live"></i> DEMO</div>
+            </div>
+            <div class="stream" id="demoStream" style="min-height:330px" aria-live="polite"></div>
+          </div>
+          <div class="chips" id="chips"></div>
+          <p class="hint">Las respuestas de esta demostración están escritas de antemano. En una clínica real, el asistente responde con la información que esa clínica configuró y consulta su agenda antes de ofrecer un horario.</p>
+        </div>
+
+        <div data-rev>
+          <div class="chat" style="padding:1.4rem 1.5rem 1.6rem">
+            <div class="eyebrow">Disponibilidad real</div>
+            <h3 style="font-family:var(--serif);font-size:1.3rem;font-weight:600;margin:.6rem 0 .4rem">Dr. Ramírez · Ortodoncia</h3>
+            <p style="font-size:.92rem;color:#3f5675">Así ve el asistente la agenda antes de ofrecer un horario. Elige uno y observa qué pasa.</p>
+
+            <div class="slot-day">Jueves 10 de septiembre</div>
+            <div class="slots" id="slotsA"></div>
+            <div class="slot-day">Viernes 11 de septiembre</div>
+            <div class="slots" id="slotsB"></div>
+
+            <div id="booked" style="margin-top:1.2rem"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="como-funciona">
+    <div class="wrap">
+      <div class="sec-top" data-rev>
+        <div class="eyebrow">Cómo funciona</div>
+        <h2 class="h2">En marcha en días, no en meses</h2>
+      </div>
+      <div class="steps" id="steps" data-rev>
+        <div class="rail"><i id="railFill"></i></div>
+        <div class="step">
+          <div class="n">PASO 01</div>
+          <h3>Conectamos</h3>
+          <p>Tu número de WhatsApp Business y el calendario de tus doctores. Nosotros nos encargamos de la parte técnica; tú no tocas nada.</p>
+        </div>
+        <div class="step">
+          <div class="n">PASO 02</div>
+          <h3>Configuramos</h3>
+          <p>Cargamos la información de tu clínica —servicios, horarios, doctores, preguntas típicas, cómo quieres que suene— y ajustamos el asistente contigo hasta que responda como responde tu mejor recepcionista.</p>
+        </div>
+        <div class="step">
+          <div class="n">PASO 03</div>
+          <h3>Sales en vivo</h3>
+          <p>El asistente empieza a atender. Tú ves cada conversación en el panel y puedes intervenir cuando quieras. Ajustamos sobre conversaciones reales durante las primeras semanas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec dark" id="panel">
+    <div class="spot" id="spot"></div>
+    <div class="wrap">
+      <div class="sec-top" data-rev>
+        <div class="eyebrow">El panel</div>
+        <h2 class="h2">Lo que tu clínica ve por dentro</h2>
+        <p class="lede">Cada conversación, cada prospecto y cada cita en un solo lugar. Sin planillas de Excel ni capturas de pantalla en el grupo del equipo.</p>
+      </div>
+      <div class="app" data-rev>
+        <div class="app-bar"><i></i><i></i><i></i><span>app.edge-ai.tech · Panel</span></div>
+        <div class="app-body">
+          <div class="app-side">
+            <p>Clínica de ejemplo</p>
+            <ul>
+              <li class="act">Panel</li>
+              <li>Conversaciones</li>
+              <li>Prospectos</li>
+              <li>Calendario</li>
+              <li>Doctores</li>
+              <li>Analítica</li>
+            </ul>
+          </div>
+          <div class="app-main">
+            <div class="kpis">
+              <div class="kpi"><b>18</b><span>Citas esta semana</span></div>
+              <div class="kpi"><b>43</b><span>Conversaciones</span></div>
+              <div class="kpi"><b>31</b><span>Prospectos nuevos</span></div>
+              <div class="kpi"><b>6</b><span>Requieren a una persona</span></div>
+            </div>
+            <div class="rows">
+              <div class="row"><div><span class="who">Claudia Effio</span><span class="what">Ortodoncia · jue 10, 4:30 p. m. · Dr. Ramírez</span></div><span class="pill b">Cita creada</span></div>
+              <div class="row"><div><span class="who">Marco Salazar</span><span class="what">Limpieza dental · pidió horarios de sábado</span></div><span class="pill n">En conversación</span></div>
+              <div class="row"><div><span class="who">Rosa Quispe</span><span class="what">Consulta sobre resultado de examen</span></div><span class="pill g">Derivado al equipo</span></div>
+              <div class="row"><div><span class="who">Diego Arroyo</span><span class="what">Implantes · vie 11, 11:00 a. m. · Dra. León</span></div><span class="pill b">Cita creada</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="figcap" data-rev>Vista ilustrativa del panel con datos ficticios. Ningún dato de paciente real aparece en este sitio.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="seguridad">
+    <div class="wrap">
+      <div class="sec-top" data-rev>
+        <div class="eyebrow">Seguridad y cumplimiento</div>
+        <h2 class="h2">Datos de salud, tratados como datos de salud</h2>
+        <p class="lede">La información de tus pacientes es un dato sensible bajo la ley peruana. Diseñamos el sistema partiendo de ahí, no lo adaptamos después.</p>
+      </div>
+      <ul class="secure" data-rev>
+        <li>
+          <h3>Cada clínica, aislada</h3>
+          <p>La separación entre clínicas no depende de que el código se comporte bien: está impuesta por la propia base de datos, fila por fila. Ninguna consulta puede devolver datos de otra clínica.</p>
+        </li>
+        <li>
+          <h3>Cifrado de datos personales</h3>
+          <p>Los datos identificables de los pacientes y las credenciales de integración se cifran en la aplicación antes de guardarse. No quedan en texto plano en ningún lado.</p>
+        </li>
+        <li>
+          <h3>La clínica es la dueña</h3>
+          <p>Bajo la Ley N.° 29733, tu clínica es la titular del banco de datos y AppointFlow actúa como encargado del tratamiento: procesamos los datos siguiendo tus instrucciones y para las finalidades que tú definas. No los usamos para otra cosa y no los vendemos.</p>
+        </li>
+        <li>
+          <h3>Trazabilidad completa</h3>
+          <p>Cada conversación, cada cita y cada cambio queda registrado con su origen, para que puedas auditar qué pasó y cuándo.</p>
+        </li>
+        <li>
+          <h3>Incidentes, avisados</h3>
+          <p>Ante un incidente de seguridad que afecte datos personales, notificamos a la clínica dentro de las 48 horas, en línea con lo que exige el reglamento vigente.</p>
+        </li>
+      </ul>
+      <p style="margin-top:1.6rem" data-rev><a class="btn btn-ghost" href="/privacidad/">Leer la política de privacidad <span class="arrow">→</span></a></p>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-top" data-rev style="margin-bottom:0">
+        <div class="eyebrow">Para quién es</div>
+        <h2 class="h2">Pensado para clínicas que viven de la agenda</h2>
+        <p class="lede">Si tu clínica recibe consultas por mensaje y su ingreso depende de que esas consultas se conviertan en citas, este es el caso de uso.</p>
+        <ul class="tags">
+          <li>Odontología y ortodoncia</li>
+          <li>Medicina estética</li>
+          <li>Medicina regenerativa</li>
+          <li>Fisioterapia y rehabilitación</li>
+          <li>Dermatología</li>
+          <li>Consultorios multi-doctor</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:clamp(2rem,4vw,3rem)">
+    <div class="wrap" style="max-width:860px">
+      <div class="sec-top" data-rev><div class="eyebrow">Preguntas frecuentes</div><h2 class="h2">Lo que suelen preguntarnos</h2></div>
+      <div class="faq" data-rev>
+        <details open>
+          <summary>¿Necesito cambiar mi número de WhatsApp?</summary>
+          <div class="ans"><p>No. Trabajamos con el número que tu clínica ya usa y que tus pacientes ya conocen. Lo migramos a la API oficial de WhatsApp Business; el número no cambia.</p></div>
+        </details>
+        <details>
+          <summary>¿Esto reemplaza a mi recepcionista?</summary>
+          <div class="ans"><p>No, le quita el trabajo repetitivo. El asistente responde las consultas de siempre y agenda; tu equipo se queda con los casos que de verdad necesitan una persona, y llega a ellos con la información ya recogida.</p></div>
+        </details>
+        <details>
+          <summary>¿El paciente sabe que habla con un asistente?</summary>
+          <div class="ans"><p>Sí. El asistente se identifica como tal y siempre ofrece pasar la conversación a una persona. Es una decisión de diseño: la confianza del paciente es el activo de la clínica.</p></div>
+        </details>
+        <details>
+          <summary>¿Qué pasa con los datos de mis pacientes?</summary>
+          <div class="ans"><p>Siguen siendo de tu clínica. Nosotros los procesamos por encargo tuyo, cifrados y aislados del resto de clientes, y te los devolvemos o eliminamos cuando termine la relación. El detalle está en la <a href="/privacidad/" style="text-decoration:underline">política de privacidad</a>.</p></div>
+        </details>
+        <details>
+          <summary>¿Funciona si tengo varios doctores o varias sedes?</summary>
+          <div class="ans"><p>Sí. Cada doctor tiene su propia agenda y sus propios horarios de atención, y el asistente ofrece solo los espacios que realmente están libres.</p></div>
+        </details>
+        <details>
+          <summary>¿Cuánto demora la implementación?</summary>
+          <div class="ans"><p>Depende de la verificación del número ante Meta, que es el paso más lento y no está en nuestras manos. Del lado nuestro, la configuración del asistente y de las agendas toma días. Lo conversamos con tu caso concreto en la llamada.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-sec" id="contacto">
+    <div class="wrap cta-grid">
+      <div data-rev>
+        <div class="eyebrow" style="color:var(--slate-light)">Siguiente paso</div>
+        <h2 class="h2" style="margin-top:.7rem">Conversemos 20 minutos</h2>
+        <p style="margin-top:1.1rem;font-family:var(--serif);font-size:1.15rem;line-height:1.55;max-width:48ch">Te mostramos el sistema funcionando con un caso parecido al de tu clínica y respondemos lo que necesites saber. Sin compromiso y sin presentación de ventas.</p>
+        <p style="margin-top:1.4rem;font-family:var(--mono);font-size:.74rem;color:var(--slate-light);line-height:1.7">
+          ¿Prefieres escribirnos?<br>
+          <a href="mailto:contacto@edge-ai.tech">contacto@edge-ai.tech</a> · <a href="tel:+51919702277">+51 919 702 277</a>
+        </p>
+      </div>
+      <div class="cta-card" data-rev>
+        <b>Elige un horario</b>
+        <div class="line"><span>Reunión por videollamada</span><span>20 min</span></div>
+        <div class="line"><span>Zona horaria</span><span>Lima (GMT-5)</span></div>
+        <div class="line"><span>Con</span><span>Equipo AppointFlow</span></div>
+        <a class="btn btn-primary" href="mailto:contacto@edge-ai.tech?subject=Quiero%20agendar%20una%20demostraci%C3%B3n%20de%20AppointFlow">Escribir para coordinar <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="font-family:var(--serif);font-weight:700;font-size:1.15rem">AppointFlow</div>
+        <p style="max-width:34ch;line-height:1.6">Asistente de atención y agendamiento de citas para clínicas.</p>
+        <p style="max-width:34ch;line-height:1.6;margin-top:.6rem;font-family:var(--mono);font-size:.72rem;color:var(--slate-light)">Un servicio de Edge Comunicación E.I.R.L.</p>
+      </div>
+      <div>
+        <h4>Sitio</h4>
+        <ul>
+          <li><a href="#que-hace">Qué hace</a></li>
+          <li><a href="#demo">Pruébalo</a></li>
+          <li><a href="#como-funciona">Cómo funciona</a></li>
+          <li><a href="#seguridad">Seguridad</a></li>
+          <li><a href="#contacto">Agendar una llamada</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal y contacto</h4>
+        <ul>
+          <li><a href="/privacidad/">Política de privacidad</a></li>
+          <li><a href="/terminos/">Términos del servicio</a></li>
+          <li><a href="/cookies/">Política de cookies</a></li>
+          <li><a href="mailto:contacto@edge-ai.tech">contacto@edge-ai.tech</a></li>
+          <li><a href="tel:+51919702277">+51 919 702 277</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legalese">
+      AppointFlow es un nombre comercial de Edge Comunicación E.I.R.L. · RUC 20603861371 · San Borja, Lima, Perú<br>
+      AppointFlow es una herramienta de comunicación y agendamiento. No presta servicios de salud, no emite diagnósticos ni recomendaciones médicas, y no sustituye el criterio de un profesional.<br>
+      WhatsApp es una marca registrada de Meta Platforms, Inc. AppointFlow no está afiliado a, ni respaldado por, Meta Platforms, Inc.
+    </div>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

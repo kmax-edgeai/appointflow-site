@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://appointflow.edge-ai.tech/sitemap.xml
