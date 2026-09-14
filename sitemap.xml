@@ -3,5 +3,8 @@
   <url><loc>https://appointflow.edge-ai.tech/</loc><priority>1.0</priority></url>
   <url><loc>https://appointflow.edge-ai.tech/privacidad/</loc><priority>0.5</priority></url>
   <url><loc>https://appointflow.edge-ai.tech/terminos/</loc><priority>0.5</priority></url>
+  <url><loc>https://appointflow.edge-ai.tech/</loc><priority>1.0</priority></url>
+  <url><loc>https://appointflow.edge-ai.tech/privacidad/</loc><priority>0.5</priority></url>
+  <url><loc>https://appointflow.edge-ai.tech/eliminacion-de-datos/</loc><priority>0.5</priority></url>
   <url><loc>https://appointflow.edge-ai.tech/cookies/</loc><priority>0.3</priority></url>
 </urlset>
