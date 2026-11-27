@@ -13,12 +13,12 @@
 <meta property="og:url" content="https://appointflow.edge-ai.tech/">
 <meta property="og:locale" content="es_PE">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#F7F8FA">
+<meta name="theme-color" content="#F4EFE6">
 <link rel="icon" href="/assets/brand/umami-ai-favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/brand/umami-ai-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=Geist:wght@300..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@300..700&display=swap">
 <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
@@ -36,6 +36,7 @@
     <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i></i><i></i></button>
   </div>
   <div class="progress" id="progress"></div>
+  <div class="progress-dot" id="progressDot" aria-hidden="true"></div>
 </header>
 <nav class="drawer" id="drawer" aria-label="Menú">
   <a href="#que-hace">Qué hace</a>
@@ -50,6 +51,7 @@
 
   <!-- Portada -->
   <section class="hero" id="hero">
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="kicker load l1"><span class="dot"></span>Asistente de citas para clínicas</p>
@@ -65,13 +67,11 @@
         </div>
       </div>
 
-      <div class="cal load n1" aria-hidden="true">
-        <div class="cal-head">
-          <div><b>Agenda de la semana</b><span>Clínica de ejemplo · Dr. Ramírez</span></div>
-          <div class="cal-count"><b id="calCount">0</b><span>citas agendadas fuera de horario</span></div>
-        </div>
-        <div class="cal-grid" id="calGrid"></div>
-        <div class="cal-toast" id="calToast"><span class="cal-toast-dot"></span><div><p id="calToastMsg"></p><time id="calToastTime"></time></div></div>
+      <div class="hclock load n1" aria-hidden="true">
+        <div class="hclock-top"><span class="live-dot"></span>Domingo · mensaje de un paciente</div>
+        <div class="hclock-time"><span>21:47</span><span class="hclock-sec">:<b id="hSec">00</b></span></div>
+        <div class="hclock-chat" id="hChat"></div>
+        <div class="hclock-done" id="hDone"><i></i>Respondido en 4 segundos</div>
       </div>
 
       <p class="trust load l8">

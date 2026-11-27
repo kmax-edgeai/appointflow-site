@@ -45,61 +45,58 @@
     setTimeout(go, 900);
   } else { markLoaded(); }
 
-  /* ---------- agenda de la portada: se llena sola ---------- */
-  var calGrid = $("calGrid");
-  if (calGrid) {
-    var days = [["Lun", "7"], ["Mar", "8"], ["Mié", "9"], ["Jue", "10"], ["Vie", "11"]];
-    var html = '<div></div>';
-    days.forEach(function (d, i) {
-      html += '<div class="cal-day" style="grid-column:' + (i + 2) + '">' + d[0] + "<span>" + d[1] + "</span></div>";
-    });
-    for (var hr = 0; hr < 9; hr++) {
-      html += '<div class="cal-hour" style="grid-row:' + (hr + 2) + '">' + (hr + 9 < 10 ? "0" : "") + (hr + 9) + ":00</div>";
-    }
-    // [día 1-5, fila 1-9 (09:00…17:00), duración en horas, quién, qué]
-    var booked = [[1, 1, 1, "Control", ""], [1, 4, 2, "Ortodoncia", ""], [2, 2, 1, "Limpieza", ""], [2, 6, 1, "Evaluación", ""],
-      [3, 1, 2, "Implantes", ""], [3, 7, 1, "Control", ""], [4, 3, 1, "Limpieza", ""], [4, 6, 2, "Blanqueamiento", ""],
-      [5, 1, 1, "Control", ""], [5, 4, 1, "Evaluación", ""]];
-    var incoming = [
-      [1, 2, 1, "Claudia E.", "Ortodoncia", "Buenas noches, ¿tienen cita para ortodoncia esta semana?", "Domingo, 21:47"],
-      [3, 8, 1, "Marco S.", "Limpieza", "¿Atienden en la tarde? Quisiera una limpieza", "Domingo, 22:15"],
-      [4, 2, 1, "Diego A.", "Implantes", "Quiero evaluarme para implantes", "Domingo, 23:02"],
-      [5, 7, 1, "Rosa Q.", "Control", "¿Tienen algo el viernes en la tarde?", "Lunes, 06:40"]
-    ];
-    function ev(e, cls) {
-      return '<div class="ev ' + cls + '" style="grid-column:' + (e[0] + 1) + ";grid-row:" + (e[1] + 1) + " / span " + e[2] + '"><b>' +
-        esc(e[3]) + "</b>" + (e[4] ? "<span>" + esc(e[4]) + "</span>" : "") + "</div>";
-    }
-    booked.forEach(function (e) { html += ev(e, ""); });
-    incoming.forEach(function (e) { html += ev(e, "ev-new"); });
-    calGrid.innerHTML = html;
-
-    var news = calGrid.querySelectorAll(".ev-new");
-    var count = $("calCount"), toast = $("calToast"), tMsg = $("calToastMsg"), tTime = $("calToastTime");
+  /* ---------- reloj de la portada: los segundos que tarda en responder ---------- */
+  var hChat = $("hChat"), hSec = $("hSec"), hDone = $("hDone");
+  if (hChat) {
+    var askMsg = { s: "in", t: "Buenas noches, ¿tienen cita para ortodoncia esta semana?", h: "21:47" };
+    var replyMsg = { s: "out", t: "Buenas noches. Sí, el Dr. Ramírez atiende ortodoncia y tiene espacios el jueves y el viernes. ¿Me confirma su nombre y un número de contacto?", h: "21:47" };
     if (reduce) {
-      news.forEach(function (n) { n.classList.add("in"); });
-      if (count) count.textContent = incoming.length;
+      hChat.appendChild(bubble(askMsg)); hChat.appendChild(bubble(replyMsg));
+      hSec.textContent = "04"; hDone.classList.add("show");
     } else {
-      var t = 1500;
-      incoming.forEach(function (e, i) {
+      var t0 = 1250;
+      setTimeout(function () { hChat.appendChild(bubble(askMsg)); }, t0);
+      setTimeout(function () {
+        var ty = document.createElement("div");
+        ty.className = "typing"; ty.innerHTML = "<i></i><i></i><i></i>";
+        hChat.appendChild(ty);
+      }, t0 + 500);
+      [1, 2, 3, 4].forEach(function (n) {
         setTimeout(function () {
-          tMsg.textContent = e[5]; tTime.textContent = e[6];
-          toast.classList.add("show");
-        }, t);
-        setTimeout(function () {
-          news[i].classList.add("in");
-          count.textContent = i + 1;
-          count.classList.add("bump");
-          setTimeout(function () { count.classList.remove("bump"); }, 260);
-        }, t + 950);
-        setTimeout(function () { toast.classList.remove("show"); }, t + 1700);
-        t += 2100;
+          hSec.textContent = "0" + n;
+          hSec.classList.remove("tick"); void hSec.offsetWidth; hSec.classList.add("tick");
+        }, t0 + 300 + n * 620);
       });
+      setTimeout(function () {
+        hChat.querySelectorAll(".typing").forEach(function (x) { x.remove(); });
+        hChat.appendChild(bubble(replyMsg));
+        hDone.classList.add("show");
+      }, t0 + 300 + 4 * 620 + 120);
     }
   }
 
+  /* ---------- el punto lima sigue al puntero en la portada ---------- */
+  var heroEl = $("hero"), cursorDot = $("cursorDot");
+  if (heroEl && cursorDot && finePointer && !reduce) {
+    var dx = 0, dy = 0, cx2 = 0, cy2 = 0, moving = false;
+    var dotLoop = function () {
+      cx2 += (dx - cx2) * 0.16; cy2 += (dy - cy2) * 0.16;
+      cursorDot.style.transform = "translate3d(" + cx2.toFixed(1) + "px," + cy2.toFixed(1) + "px,0)";
+      if (Math.abs(dx - cx2) > 0.2 || Math.abs(dy - cy2) > 0.2) requestAnimationFrame(dotLoop); else moving = false;
+    };
+    heroEl.addEventListener("pointermove", function (e) {
+      var r = heroEl.getBoundingClientRect();
+      dx = e.clientX - r.left; dy = e.clientY - r.top;
+      if (!moving) { moving = true; requestAnimationFrame(dotLoop); }
+    });
+    heroEl.addEventListener("pointerenter", function (e) {
+      var r = heroEl.getBoundingClientRect();
+      cx2 = dx = e.clientX - r.left; cy2 = dy = e.clientY - r.top;
+    });
+  } else if (cursorDot) { cursorDot.remove(); }
+
   /* ---------- todo lo que depende del scroll, en un solo cuadro ---------- */
-  var head = $("head"), bar = $("progress");
+  var head = $("head"), bar = $("progress"), progressDot = $("progressDot");
   var darkSecs = document.querySelectorAll("[data-theme='dark']");
   var stepsBox = $("steps"), railFill = $("railFill"), steps = document.querySelectorAll(".step");
   var story = $("que-hace"), appStage = $("appStage"), app = $("app");
@@ -122,7 +119,9 @@
     }
     if (bar) {
       var h = document.documentElement.scrollHeight - vh;
-      bar.style.transform = "scaleX(" + (h > 0 ? clamp(y / h, 0, 1) : 0) + ")";
+      var prog = h > 0 ? clamp(y / h, 0, 1) : 0;
+      bar.style.transform = "scaleX(" + prog + ")";
+      if (progressDot) progressDot.style.transform = "translateX(" + (prog * window.innerWidth).toFixed(1) + "px)";
     }
 
     if (scrubWords.length) {
