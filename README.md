@@ -1,6 +1,7 @@
 # appointflow.edge-ai.tech
 
-Sitio público de **AppointFlow**, nombre comercial de Edge Comunicación E.I.R.L. (RUC 20603861371).
+Sitio público de **Umami AI**, un servicio de Edge Comunicación E.I.R.L. (RUC 20603861371).
+AppointFlow sigue siendo el nombre del sistema y del dominio.
 
 Sitio estático, sin build ni dependencias: HTML, una hoja de estilos y un archivo JS sin librerías.
 Se publica con GitHub Pages desde la rama `main`.
@@ -11,7 +12,8 @@ privacidad/           política de privacidad (Ley N.° 29733 · D.S. N.° 016-2
 terminos/             términos del servicio
 cookies/              política de cookies
 assets/styles.css     sistema visual completo
-assets/app.js         interacciones (demo del asistente, agenda, navegación)
+assets/app.js         interacciones y animaciones (historia anclada, demo, agenda, navegación)
+assets/brand/         logo, ícono y favicon de Umami AI
 CNAME                 dominio propio
 ```
 
