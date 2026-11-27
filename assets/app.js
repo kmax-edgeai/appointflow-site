@@ -45,8 +45,58 @@
     setTimeout(go, 900);
   } else { markLoaded(); }
 
+  /* ---------- reloj de la portada: los segundos que tarda en responder ---------- */
+  var hChat = $("hChat"), hSec = $("hSec"), hDone = $("hDone");
+  if (hChat) {
+    var askMsg = { s: "in", t: "Buenas noches, ¿tienen cita para ortodoncia esta semana?", h: "21:47" };
+    var replyMsg = { s: "out", t: "Buenas noches. Sí, el Dr. Ramírez atiende ortodoncia y tiene espacios el jueves y el viernes. ¿Me confirma su nombre y un número de contacto?", h: "21:47" };
+    if (reduce) {
+      hChat.appendChild(bubble(askMsg)); hChat.appendChild(bubble(replyMsg));
+      hSec.textContent = "04"; hDone.classList.add("show");
+    } else {
+      var t0 = 1250;
+      setTimeout(function () { hChat.appendChild(bubble(askMsg)); }, t0);
+      setTimeout(function () {
+        var ty = document.createElement("div");
+        ty.className = "typing"; ty.innerHTML = "<i></i><i></i><i></i>";
+        hChat.appendChild(ty);
+      }, t0 + 500);
+      [1, 2, 3, 4].forEach(function (n) {
+        setTimeout(function () {
+          hSec.textContent = "0" + n;
+          hSec.classList.remove("tick"); void hSec.offsetWidth; hSec.classList.add("tick");
+        }, t0 + 300 + n * 620);
+      });
+      setTimeout(function () {
+        hChat.querySelectorAll(".typing").forEach(function (x) { x.remove(); });
+        hChat.appendChild(bubble(replyMsg));
+        hDone.classList.add("show");
+      }, t0 + 300 + 4 * 620 + 120);
+    }
+  }
+
+  /* ---------- el punto lima sigue al puntero en la portada ---------- */
+  var heroEl = $("hero"), cursorDot = $("cursorDot");
+  if (heroEl && cursorDot && finePointer && !reduce) {
+    var dx = 0, dy = 0, cx2 = 0, cy2 = 0, moving = false;
+    var dotLoop = function () {
+      cx2 += (dx - cx2) * 0.16; cy2 += (dy - cy2) * 0.16;
+      cursorDot.style.transform = "translate3d(" + cx2.toFixed(1) + "px," + cy2.toFixed(1) + "px,0)";
+      if (Math.abs(dx - cx2) > 0.2 || Math.abs(dy - cy2) > 0.2) requestAnimationFrame(dotLoop); else moving = false;
+    };
+    heroEl.addEventListener("pointermove", function (e) {
+      var r = heroEl.getBoundingClientRect();
+      dx = e.clientX - r.left; dy = e.clientY - r.top;
+      if (!moving) { moving = true; requestAnimationFrame(dotLoop); }
+    });
+    heroEl.addEventListener("pointerenter", function (e) {
+      var r = heroEl.getBoundingClientRect();
+      cx2 = dx = e.clientX - r.left; cy2 = dy = e.clientY - r.top;
+    });
+  } else if (cursorDot) { cursorDot.remove(); }
+
   /* ---------- todo lo que depende del scroll, en un solo cuadro ---------- */
-  var head = $("head"), bar = $("progress");
+  var head = $("head"), bar = $("progress"), progressDot = $("progressDot");
   var darkSecs = document.querySelectorAll("[data-theme='dark']");
   var stepsBox = $("steps"), railFill = $("railFill"), steps = document.querySelectorAll(".step");
   var story = $("que-hace"), appStage = $("appStage"), app = $("app");
@@ -69,7 +119,9 @@
     }
     if (bar) {
       var h = document.documentElement.scrollHeight - vh;
-      bar.style.transform = "scaleX(" + (h > 0 ? clamp(y / h, 0, 1) : 0) + ")";
+      var prog = h > 0 ? clamp(y / h, 0, 1) : 0;
+      bar.style.transform = "scaleX(" + prog + ")";
+      if (progressDot) progressDot.style.transform = "translateX(" + (prog * window.innerWidth).toFixed(1) + "px)";
     }
 
     if (scrubWords.length) {
@@ -154,7 +206,7 @@
   }
   if (reduce) goLive();
 
-  /* ---------- luz que sigue al puntero (portada y panel) ---------- */
+  /* ---------- luz que sigue al puntero en el panel ---------- */
   function follower(area, el, strength) {
     if (!area || !el || reduce || !finePointer) return;
     var tx = 0, ty = 0, cx = 0, cy = 0, running = false;
@@ -174,7 +226,6 @@
       if (!running) { running = true; requestAnimationFrame(loop); }
     });
   }
-  follower($("hero"), $("heroGlow"), 0.18);
   follower($("panel"), $("spot"), 0.5);
 
   /* ---------- botones magnéticos ---------- */
@@ -202,7 +253,11 @@
   /* ---------- historia anclada: el scroll avanza la conversación ---------- */
   var storyStream = $("storyStream");
   var storySteps = document.querySelectorAll("#storySteps li");
-  var storyDots = document.querySelectorAll("#storyDots i");
+  var storyDots = document.querySelectorAll("#storyDots li");
+  var timelineFill = $("timelineFill"), clockTime = $("clockTime"), clockSub = $("clockSub");
+  var clockTimes = ["21:47", "21:47", "21:48", "21:49", "21:50"];
+  var clockLabels = ["Llega el mensaje", "4 segundos después", "Pide sus datos", "Ofrece horarios libres", "Cita creada"];
+  var clockNow = "21:47";
   var storyScript = [
     { st: 0, s: "in",  t: "Buenas noches, ¿tienen cita para ortodoncia esta semana?", h: "21:47" },
     { st: 1, s: "out", t: "Buenas noches. Sí, el Dr. Ramírez atiende ortodoncia y tiene espacios el jueves y el viernes. Para reservarle, ¿me confirma su nombre completo y un número de contacto?", h: "21:47", b: "respondió en 4 s" },
@@ -238,6 +293,20 @@
 
     storySteps.forEach(function (li, i) { li.classList.toggle("on", i === k); li.classList.toggle("gone", i < k); });
     storyDots.forEach(function (d, i) { d.classList.toggle("on", i === k); d.classList.toggle("done", i < k); });
+    if (timelineFill) timelineFill.style.transform = "scaleX(" + (k / (storySteps.length - 1)) + ")";
+    if (clockSub) clockSub.textContent = clockLabels[k];
+    if (clockTime && clockTimes[k] !== clockNow) {
+      clockNow = clockTimes[k];
+      var old = clockTime.querySelector("span:not(.roll-out)");
+      var next = document.createElement("span");
+      next.textContent = clockNow;
+      if (!reduce) next.className = "roll-in";
+      clockTime.appendChild(next);
+      if (old) {
+        if (reduce) old.remove();
+        else { old.className = "roll-out"; setTimeout(function () { old.remove(); }, 500); }
+      }
+    }
 
     storyTimers.forEach(clearTimeout); storyTimers = [];
     storyStream.querySelectorAll(".typing").forEach(function (t) { t.remove(); });
@@ -281,35 +350,6 @@
     var total = story.offsetHeight - vh;
     var p = total > 0 ? clamp(-r.top / total, 0, 0.9999) : 1;
     setStoryStep(Math.floor(p * storySteps.length));
-  }
-
-  /* ---------- acordeón con avance automático ---------- */
-  var acc = $("accordion");
-  if (acc) {
-    var items = Array.prototype.slice.call(acc.querySelectorAll(".acc"));
-    var wide = window.matchMedia("(min-width: 981px)");
-    var select = function (i) {
-      items.forEach(function (b, j) {
-        b.classList.toggle("on", j === i);
-        b.setAttribute("aria-expanded", j === i ? "true" : "false");
-      });
-    };
-    items.forEach(function (b, i) {
-      b.addEventListener("click", function () { select(i); });
-      var fill = b.querySelector(".acc-bar i");
-      if (fill) fill.addEventListener("animationend", function () {
-        if (b.classList.contains("on") && acc.classList.contains("auto")) select((i + 1) % items.length);
-      });
-    });
-    acc.addEventListener("pointerenter", function () { acc.classList.add("paused"); });
-    acc.addEventListener("pointerleave", function () { acc.classList.remove("paused"); });
-    acc.addEventListener("focusin", function () { acc.classList.add("paused"); });
-    acc.addEventListener("focusout", function () { acc.classList.remove("paused"); });
-    if (!reduce && "IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { acc.classList.toggle("auto", en.isIntersecting && wide.matches); });
-      }, { threshold: 0.45 }).observe(acc);
-    }
   }
 
   /* ---------- preguntas frecuentes con apertura suave ---------- */

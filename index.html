@@ -13,12 +13,12 @@
 <meta property="og:url" content="https://appointflow.edge-ai.tech/">
 <meta property="og:locale" content="es_PE">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#F6F8FB">
+<meta name="theme-color" content="#F4EFE6">
 <link rel="icon" href="/assets/brand/umami-ai-favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/brand/umami-ai-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@300..700&display=swap">
 <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
@@ -36,6 +36,7 @@
     <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i></i><i></i></button>
   </div>
   <div class="progress" id="progress"></div>
+  <div class="progress-dot" id="progressDot" aria-hidden="true"></div>
 </header>
 <nav class="drawer" id="drawer" aria-label="Menú">
   <a href="#que-hace">Qué hace</a>
@@ -50,27 +51,27 @@
 
   <!-- Portada -->
   <section class="hero" id="hero">
-    <div class="hero-glow" id="heroGlow" aria-hidden="true"></div>
-    <div class="wrap hero-inner">
-      <p class="kicker load l1"><span class="dot"></span>Asistente de citas para clínicas</p>
-      <h1 class="hero-title">
-        <span class="ln"><span class="load l2">La primera respuesta</span></span>
-        <span class="ln"><span class="load l3">de tu clínica,</span></span>
-        <span class="ln"><span class="load l4 grad">en menos de un minuto.</span></span>
-      </h1>
-      <p class="lede load l5">Umami AI contesta los mensajes de tus pacientes, resuelve sus dudas, toma sus datos y deja la cita agendada en el calendario del doctor. Tu equipo deja de vivir pendiente del celular.</p>
-      <div class="hero-actions load l6">
-        <a class="btn btn-primary btn-lg magnet" href="#contacto"><span>Agendar una demostración</span></a>
-        <a class="btn btn-ghost btn-lg" href="#demo">Ver cómo responde</a>
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker load l1"><span class="dot"></span>Asistente de citas para clínicas</p>
+        <h1 class="hero-title">
+          <span class="ln"><span class="load l2">La primera respuesta</span></span>
+          <span class="ln"><span class="load l3">de tu clínica, en</span></span>
+          <span class="ln"><span class="load l4">menos de un minuto.</span></span>
+        </h1>
+        <p class="lede load l5">Umami AI contesta los mensajes de tus pacientes, resuelve sus dudas, toma sus datos y deja la cita agendada en el calendario del doctor. Tu equipo deja de vivir pendiente del celular.</p>
+        <div class="hero-actions load l6">
+          <a class="btn btn-primary btn-lg magnet" href="#contacto"><span>Agendar una demostración</span></a>
+          <a class="btn btn-ghost btn-lg" href="#demo">Ver cómo responde</a>
+        </div>
       </div>
 
-      <div class="notif load l7" aria-hidden="true">
-        <div class="notif-app"><img src="/assets/brand/umami-ai-icon.png" alt="" width="36" height="36"></div>
-        <div class="notif-body">
-          <div class="notif-top"><b>Paciente nuevo</b><time>21:47</time></div>
-          <p>Buenas noches, ¿tienen cita para ortodoncia esta semana?</p>
-        </div>
-        <div class="notif-done"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg>Respondido en 4 s</div>
+      <div class="hclock load n1" aria-hidden="true">
+        <div class="hclock-top"><span class="live-dot"></span>Domingo · mensaje de un paciente</div>
+        <div class="hclock-time"><span>21:47</span><span class="hclock-sec">:<b id="hSec">00</b></span></div>
+        <div class="hclock-chat" id="hChat"></div>
+        <div class="hclock-done" id="hDone"><i></i>Respondido en 4 segundos</div>
       </div>
 
       <p class="trust load l8">
@@ -81,7 +82,7 @@
   </section>
 
   <!-- El problema: palabras que se encienden con el scroll -->
-  <section class="statement" data-theme="dark">
+  <section class="statement">
     <div class="wrap">
       <p class="scrub" id="scrub">El paciente escribe cuando puede. Tu recepción atiende cuando puede. Entre esos dos momentos se pierden las citas.</p>
       <div class="statement-foot">
@@ -97,7 +98,11 @@
       <div class="wrap story-grid">
         <div class="story-copy">
           <p class="kicker"><span class="dot"></span>Qué hace</p>
-          <h2 class="h2">Una conversación, de principio a fin</h2>
+          <h2 class="h2">Una noche en la clínica</h2>
+          <div class="clock" aria-hidden="true">
+            <span class="clock-time" id="clockTime"><span>21:47</span></span>
+            <span class="clock-sub" id="clockSub">Llega el mensaje</span>
+          </div>
           <ol class="story-steps" id="storySteps">
             <li class="on"><h3>Un paciente escribe de noche.</h3><p>Fuera de horario, en feriado o mientras tu recepción atiende en el mostrador. El mensaje no se queda esperando.</p></li>
             <li><h3>Responde en segundos.</h3><p>Con la información real de tu clínica: qué doctor atiende, qué días, qué se necesita para la cita.</p></li>
@@ -105,7 +110,10 @@
             <li><h3>Ofrece solo horarios libres.</h3><p>Consulta la agenda del doctor antes de ofrecer, y la cita queda puesta durante la misma conversación.</p></li>
             <li><h3>Tu equipo lo encuentra hecho.</h3><p>Cita creada, prospecto registrado y recepción avisada con el resumen.</p></li>
           </ol>
-          <div class="story-dots" id="storyDots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+          <div class="timeline" aria-hidden="true">
+            <div class="timeline-track"><i id="timelineFill"></i></div>
+            <ol class="timeline-ticks" id="storyDots"><li class="on">21:47</li><li>+4 s</li><li>21:48</li><li>21:49</li><li>21:50</li></ol>
+          </div>
         </div>
         <div class="phone" aria-label="Conversación de ejemplo con datos ficticios">
           <div class="phone-head">
@@ -126,28 +134,24 @@
         <h2 class="h2" data-split>Y todo lo que pasa alrededor</h2>
         <p class="lede" data-rev>Trabaja sobre la API oficial de WhatsApp Business de Meta, con el número que tu clínica ya tiene publicado. No cambias de número ni migras conversaciones.</p>
       </div>
-      <div class="accordion" id="accordion" data-rev>
-        <button class="acc on" type="button" aria-expanded="true">
-          <span class="acc-title">Sabe cuándo llamar a una persona</span>
-          <span class="acc-body">Ante un caso clínico delicado, un reclamo o algo fuera de su alcance, entrega la conversación a tu equipo y avisa al número que designes con un resumen: quién es, qué quiere, cuándo, DNI y teléfono.</span>
-          <span class="acc-bar"><i></i></span>
-        </button>
-        <button class="acc" type="button" aria-expanded="false">
-          <span class="acc-title">Evalúa cada prospecto</span>
-          <span class="acc-body">Cada lead queda registrado desde el primer mensaje y evaluado según cómo terminó su conversación, para que tu equipo sepa a quién llamar primero.</span>
-          <span class="acc-bar"><i></i></span>
-        </button>
-        <button class="acc" type="button" aria-expanded="false">
-          <span class="acc-title">Una agenda por doctor</span>
-          <span class="acc-body">Varias sedes o varios doctores, cada uno con su propia agenda y sus horarios de atención. El asistente ofrece solo los espacios que realmente están libres.</span>
-          <span class="acc-bar"><i></i></span>
-        </button>
-        <button class="acc" type="button" aria-expanded="false">
-          <span class="acc-title">Todo queda en un panel</span>
-          <span class="acc-body">Conversaciones, prospectos, citas y métricas en un solo lugar, con el historial completo de cada paciente.</span>
-          <span class="acc-bar"><i></i></span>
-        </button>
-      </div>
+      <ul class="blocks" data-rev>
+        <li>
+          <h3>Sabe cuándo llamar a una persona</h3>
+          <p>Ante un caso clínico delicado, un reclamo o algo fuera de su alcance, entrega la conversación a tu equipo y avisa al número que designes con un resumen: quién es, qué quiere, cuándo, DNI y teléfono.</p>
+        </li>
+        <li>
+          <h3>Evalúa cada prospecto</h3>
+          <p>Cada lead queda registrado desde el primer mensaje y evaluado según cómo terminó su conversación, para que tu equipo sepa a quién llamar primero.</p>
+        </li>
+        <li>
+          <h3>Una agenda por doctor</h3>
+          <p>Varias sedes o varios doctores, cada uno con su propia agenda y sus horarios de atención. El asistente ofrece solo los espacios que realmente están libres.</p>
+        </li>
+        <li>
+          <h3>Todo queda en un panel</h3>
+          <p>Conversaciones, prospectos, citas y métricas en un solo lugar, con el historial completo de cada paciente.</p>
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -347,7 +351,7 @@
   </section>
 
   <!-- Contacto -->
-  <section class="cta-sec" id="contacto" data-theme="dark">
+  <section class="cta-sec" id="contacto">
     <div class="wrap cta-grid">
       <div>
         <h2 class="h2 cta-title" data-split>Conversemos 20 minutos</h2>
@@ -359,7 +363,7 @@
         <div class="line"><span>Duración</span><span>20 min</span></div>
         <div class="line"><span>Zona horaria</span><span>Lima (GMT-5)</span></div>
         <div class="line"><span>Con</span><span>Equipo Umami AI</span></div>
-        <a class="btn btn-lime btn-lg magnet" href="mailto:contacto@edge-ai.tech?subject=Quiero%20agendar%20una%20demostraci%C3%B3n%20de%20Umami%20AI"><span>Escribir para coordinar</span></a>
+        <a class="btn btn-primary btn-lg magnet" href="mailto:contacto@edge-ai.tech?subject=Quiero%20agendar%20una%20demostraci%C3%B3n%20de%20Umami%20AI"><span>Escribir para coordinar</span></a>
       </div>
     </div>
   </section>
