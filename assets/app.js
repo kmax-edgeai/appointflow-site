@@ -45,6 +45,59 @@
     setTimeout(go, 900);
   } else { markLoaded(); }
 
+  /* ---------- agenda de la portada: se llena sola ---------- */
+  var calGrid = $("calGrid");
+  if (calGrid) {
+    var days = [["Lun", "7"], ["Mar", "8"], ["Mié", "9"], ["Jue", "10"], ["Vie", "11"]];
+    var html = '<div></div>';
+    days.forEach(function (d, i) {
+      html += '<div class="cal-day" style="grid-column:' + (i + 2) + '">' + d[0] + "<span>" + d[1] + "</span></div>";
+    });
+    for (var hr = 0; hr < 9; hr++) {
+      html += '<div class="cal-hour" style="grid-row:' + (hr + 2) + '">' + (hr + 9 < 10 ? "0" : "") + (hr + 9) + ":00</div>";
+    }
+    // [día 1-5, fila 1-9 (09:00…17:00), duración en horas, quién, qué]
+    var booked = [[1, 1, 1, "Control", ""], [1, 4, 2, "Ortodoncia", ""], [2, 2, 1, "Limpieza", ""], [2, 6, 1, "Evaluación", ""],
+      [3, 1, 2, "Implantes", ""], [3, 7, 1, "Control", ""], [4, 3, 1, "Limpieza", ""], [4, 6, 2, "Blanqueamiento", ""],
+      [5, 1, 1, "Control", ""], [5, 4, 1, "Evaluación", ""]];
+    var incoming = [
+      [1, 2, 1, "Claudia E.", "Ortodoncia", "Buenas noches, ¿tienen cita para ortodoncia esta semana?", "Domingo, 21:47"],
+      [3, 8, 1, "Marco S.", "Limpieza", "¿Atienden en la tarde? Quisiera una limpieza", "Domingo, 22:15"],
+      [4, 2, 1, "Diego A.", "Implantes", "Quiero evaluarme para implantes", "Domingo, 23:02"],
+      [5, 7, 1, "Rosa Q.", "Control", "¿Tienen algo el viernes en la tarde?", "Lunes, 06:40"]
+    ];
+    function ev(e, cls) {
+      return '<div class="ev ' + cls + '" style="grid-column:' + (e[0] + 1) + ";grid-row:" + (e[1] + 1) + " / span " + e[2] + '"><b>' +
+        esc(e[3]) + "</b>" + (e[4] ? "<span>" + esc(e[4]) + "</span>" : "") + "</div>";
+    }
+    booked.forEach(function (e) { html += ev(e, ""); });
+    incoming.forEach(function (e) { html += ev(e, "ev-new"); });
+    calGrid.innerHTML = html;
+
+    var news = calGrid.querySelectorAll(".ev-new");
+    var count = $("calCount"), toast = $("calToast"), tMsg = $("calToastMsg"), tTime = $("calToastTime");
+    if (reduce) {
+      news.forEach(function (n) { n.classList.add("in"); });
+      if (count) count.textContent = incoming.length;
+    } else {
+      var t = 1500;
+      incoming.forEach(function (e, i) {
+        setTimeout(function () {
+          tMsg.textContent = e[5]; tTime.textContent = e[6];
+          toast.classList.add("show");
+        }, t);
+        setTimeout(function () {
+          news[i].classList.add("in");
+          count.textContent = i + 1;
+          count.classList.add("bump");
+          setTimeout(function () { count.classList.remove("bump"); }, 260);
+        }, t + 950);
+        setTimeout(function () { toast.classList.remove("show"); }, t + 1700);
+        t += 2100;
+      });
+    }
+  }
+
   /* ---------- todo lo que depende del scroll, en un solo cuadro ---------- */
   var head = $("head"), bar = $("progress");
   var darkSecs = document.querySelectorAll("[data-theme='dark']");
@@ -154,7 +207,7 @@
   }
   if (reduce) goLive();
 
-  /* ---------- luz que sigue al puntero (portada y panel) ---------- */
+  /* ---------- luz que sigue al puntero en el panel ---------- */
   function follower(area, el, strength) {
     if (!area || !el || reduce || !finePointer) return;
     var tx = 0, ty = 0, cx = 0, cy = 0, running = false;
@@ -174,7 +227,6 @@
       if (!running) { running = true; requestAnimationFrame(loop); }
     });
   }
-  follower($("hero"), $("heroGlow"), 0.18);
   follower($("panel"), $("spot"), 0.5);
 
   /* ---------- botones magnéticos ---------- */
@@ -202,7 +254,11 @@
   /* ---------- historia anclada: el scroll avanza la conversación ---------- */
   var storyStream = $("storyStream");
   var storySteps = document.querySelectorAll("#storySteps li");
-  var storyDots = document.querySelectorAll("#storyDots i");
+  var storyDots = document.querySelectorAll("#storyDots li");
+  var timelineFill = $("timelineFill"), clockTime = $("clockTime"), clockSub = $("clockSub");
+  var clockTimes = ["21:47", "21:47", "21:48", "21:49", "21:50"];
+  var clockLabels = ["Llega el mensaje", "4 segundos después", "Pide sus datos", "Ofrece horarios libres", "Cita creada"];
+  var clockNow = "21:47";
   var storyScript = [
     { st: 0, s: "in",  t: "Buenas noches, ¿tienen cita para ortodoncia esta semana?", h: "21:47" },
     { st: 1, s: "out", t: "Buenas noches. Sí, el Dr. Ramírez atiende ortodoncia y tiene espacios el jueves y el viernes. Para reservarle, ¿me confirma su nombre completo y un número de contacto?", h: "21:47", b: "respondió en 4 s" },
@@ -238,6 +294,20 @@
 
     storySteps.forEach(function (li, i) { li.classList.toggle("on", i === k); li.classList.toggle("gone", i < k); });
     storyDots.forEach(function (d, i) { d.classList.toggle("on", i === k); d.classList.toggle("done", i < k); });
+    if (timelineFill) timelineFill.style.transform = "scaleX(" + (k / (storySteps.length - 1)) + ")";
+    if (clockSub) clockSub.textContent = clockLabels[k];
+    if (clockTime && clockTimes[k] !== clockNow) {
+      clockNow = clockTimes[k];
+      var old = clockTime.querySelector("span:not(.roll-out)");
+      var next = document.createElement("span");
+      next.textContent = clockNow;
+      if (!reduce) next.className = "roll-in";
+      clockTime.appendChild(next);
+      if (old) {
+        if (reduce) old.remove();
+        else { old.className = "roll-out"; setTimeout(function () { old.remove(); }, 500); }
+      }
+    }
 
     storyTimers.forEach(clearTimeout); storyTimers = [];
     storyStream.querySelectorAll(".typing").forEach(function (t) { t.remove(); });
@@ -281,35 +351,6 @@
     var total = story.offsetHeight - vh;
     var p = total > 0 ? clamp(-r.top / total, 0, 0.9999) : 1;
     setStoryStep(Math.floor(p * storySteps.length));
-  }
-
-  /* ---------- acordeón con avance automático ---------- */
-  var acc = $("accordion");
-  if (acc) {
-    var items = Array.prototype.slice.call(acc.querySelectorAll(".acc"));
-    var wide = window.matchMedia("(min-width: 981px)");
-    var select = function (i) {
-      items.forEach(function (b, j) {
-        b.classList.toggle("on", j === i);
-        b.setAttribute("aria-expanded", j === i ? "true" : "false");
-      });
-    };
-    items.forEach(function (b, i) {
-      b.addEventListener("click", function () { select(i); });
-      var fill = b.querySelector(".acc-bar i");
-      if (fill) fill.addEventListener("animationend", function () {
-        if (b.classList.contains("on") && acc.classList.contains("auto")) select((i + 1) % items.length);
-      });
-    });
-    acc.addEventListener("pointerenter", function () { acc.classList.add("paused"); });
-    acc.addEventListener("pointerleave", function () { acc.classList.remove("paused"); });
-    acc.addEventListener("focusin", function () { acc.classList.add("paused"); });
-    acc.addEventListener("focusout", function () { acc.classList.remove("paused"); });
-    if (!reduce && "IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { acc.classList.toggle("auto", en.isIntersecting && wide.matches); });
-      }, { threshold: 0.45 }).observe(acc);
-    }
   }
 
   /* ---------- preguntas frecuentes con apertura suave ---------- */
